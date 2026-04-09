@@ -55,14 +55,22 @@ resource "google_compute_firewall" "allow-gke" {
 
 # GKE Cluster
 resource "google_container_cluster" "primary" {
-  project             = var.project
-  name                = "terraform-gke-cluster"
-  location            = var.region
-  network             = google_compute_network.custom_network.id
-  subnetwork          = google_compute_subnetwork.custom-subnet.id
-  deletion_protection = false
+  project    = var.project
+  name       = "terraform-gke-cluster"
+  location   = var.region
+  network    = google_compute_network.custom_network.id
+  subnetwork = google_compute_subnetwork.custom-subnet.id
+
   remove_default_node_pool = true
-  initial_node_count       = 0  
+  initial_node_count       = 1   # must be > 0
+
+  node_config {
+    disk_type    = "pd-standard"   # 🔥 force non-SSD
+    disk_size_gb = 10              # minimal disk
+    machine_type = "e2-micro"      # smallest possible
+  }
+
+  deletion_protection = false
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
