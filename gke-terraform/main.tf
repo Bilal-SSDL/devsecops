@@ -66,8 +66,8 @@ resource "google_container_cluster" "primary" {
 
   node_config {
     disk_type    = "pd-standard"   # 🔥 force non-SSD
-    disk_size_gb = 10              # minimal disk
-    machine_type = "e2-micro"      # smallest possible
+    disk_size_gb = 12              # minimal disk
+    machine_type = "e2-small"      # smallest possible
   }
 
   deletion_protection = false
